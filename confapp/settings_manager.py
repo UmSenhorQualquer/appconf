@@ -11,9 +11,11 @@ class SettingsManager(object):
 		if module_name in self._loaded_modules.keys(): return self._loaded_modules[module_name]
 
 		modules = module_name.split('.')
-		moduleclass = __import__( '.'.join(modules[:-1]) , fromlist=[modules[-1]] )
-
-		module = getattr(moduleclass, modules[-1])
+		if len(modules) > 1:
+			moduleclass = __import__( '.'.join(modules[:-1]) , fromlist=[modules[-1]] )
+			module = getattr(moduleclass, modules[-1])
+		else:
+			module = __import__(module_name)
 		self._loaded_modules[module_name] = module
 
 		return module
